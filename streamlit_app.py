@@ -15,6 +15,13 @@ for msg in st.session_state.messages:
 # Add markdown input area
 markdown_input = st.text_area("Enter your article in markdown format:", "")
 
+if st.button("Preview Markdown"):
+    if markdown_input:
+        st.subheader("Markdown Preview:")
+        st.markdown(markdown_input)
+    else:
+        st.warning("Please enter some text to preview.")
+
 if st.button("Submit Article"):
     if not markdown_input:
         st.warning("Please enter some text before submitting.")
