@@ -7,8 +7,35 @@ def create_text_input(key="user_input", height=200):
     return st.text_area("Enter your text here:", height=height, key=key)
 
 def create_assistant_tabs(assistants):
-    """Create tabs for different assistants."""
-    return st.tabs([assistant["name"] for assistant in assistants] + ["Markdown Converter"])
+    # Custom CSS for colorful tabs
+    st.markdown("""
+    <style>
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        padding: 0 20px;
+        border-radius: 10px 10px 0 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #FFFFFF;
+    }
+    .stTabs [data-baseweb="tab"]:nth-child(1) { background-color: #FF6B6B; }
+    .stTabs [data-baseweb="tab"]:nth-child(2) { background-color: #4ECDC4; }
+    .stTabs [data-baseweb="tab"]:nth-child(3) { background-color: #45B7D1; }
+    .stTabs [data-baseweb="tab"]:nth-child(4) { background-color: #F7B801; }
+    .stTabs [data-baseweb="tab"]:nth-child(5) { background-color: #8A2BE2; }
+    .stTabs [aria-selected="true"] {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Create tabs
+    tabs = st.tabs([assistant['name'] for assistant in assistants] + ["Markdown Converter"])
+    
+    return tabs
 
 def create_process_button(assistant_name, key):
     """Create a process button for an assistant."""

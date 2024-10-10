@@ -78,7 +78,7 @@ class StreamlitApp:
                         response = self.handle_user_input(user_input, ASSISTANTS[i]['id'])
                         self.display_assistant_response(response)
                     else:
-                        ui_components.create_warning_message("Please enter some text before processing.")
+                        ui_components.create_warning_message("Please enter some text before processing.", key=f"warning_{i}")
 
         with tabs[-1]:
             markdown_converter_ui(user_input)
