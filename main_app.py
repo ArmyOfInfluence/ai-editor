@@ -29,6 +29,12 @@ class StreamlitApp:
             st.session_state.thread = None
         if "current_page" not in st.session_state:
             st.session_state.current_page = "Home"
+        if "show_instagram_options" not in st.session_state:
+            st.session_state.show_instagram_options = False
+        if "num_slides" not in st.session_state:
+            st.session_state.num_slides = 7
+        if "chars_per_slide" not in st.session_state:
+            st.session_state.chars_per_slide = 280
 
     def setup_page(self):
         st.set_page_config(page_title="AI Assistant", page_icon="🤖", layout="wide")
@@ -61,7 +67,17 @@ class StreamlitApp:
             st.sidebar.markdown("---")
             st.sidebar.caption("AI Assistant v1.0")
             st.sidebar.caption("© 2024 Build with ♥️ by UActuality team 🇺🇦")
-
+    
+    def render_instagram_options(self):
+        st.session_state.show_instagram_options = st.toggle("Show Instagram Content Options", value=st.session_state.show_instagram_options)
+        
+        if st.session_state.show_instagram_options:
+            st.subheader("Instagram Content Options")
+            st.session_state.num_slides = st.number_input("Number of slides:", min_value=1, max_value=10, value=st.session_state.num_slides)
+            st.session_state.chars_per_slide = st.number_input("Characters per slide:", min_value=50, max_value=500, value=st.session_state.chars_per_slide)
+        else:
+            st.info("Instagram content settings will be determined by the AI.")
+    
     def render_home_page(self):
         st.title("🤖 AI Editor in Chief")
         st.caption("🇺🇦 Powered by UActuality")
@@ -73,6 +89,10 @@ class StreamlitApp:
         for i, tab in enumerate(tabs[:-1]):
             with tab:
                 st.write(f"Using the {ASSISTANTS[i]['name']} assistant.")
+
+                if ASSISTANTS[i]['name'] == "Build Instagram Content":
+                    self.render_instagram_options()
+
                 if ui_components.create_process_button(ASSISTANTS[i]['name'], key=f"process_button_{i}"):
                     if user_input:
                         response = self.handle_user_input(user_input, ASSISTANTS[i]['id'])
@@ -95,8 +115,18 @@ class StreamlitApp:
             st.markdown("---")
 
     def handle_user_input(self, user_input, assistant_id):
-        cleaned_input = utils.clean_text(user_input)
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+        assistant_name = next((a['name'] for a in ASSISTANTS if a['id'] == assistant_id), None)
+        if assistant_name == "Build Instagram Content":
+            cleaned_input = f"\n\n{{ARTICLE_TEXT}}: {utils.clean_text(user_input)}"
+
+            if st.session_state.show_instagram_options:
+                cleaned_input += f"\n\n{{NUM_SLIDES}}: {st.session_state.num_slides}"
+                cleaned_input += f"\n{{CHARS_PER_SLIDE}}: {st.session_state.chars_per_slide}"
+        else:
+            cleaned_input = utils.clean_text(user_input)
+
         st.session_state.messages.append({"role": "user", "content": user_input, "timestamp": timestamp})
 
         if st.session_state.thread is None:
