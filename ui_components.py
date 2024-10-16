@@ -7,11 +7,10 @@ def create_text_input(key="user_input", height=200):
     return st.text_area("Enter your text here:", height=height, key=key)
 
 def create_assistant_tabs(assistants):
-    # Custom CSS for colorful tabs
     st.markdown("""
     <style>
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 12px;
     }
     .stTabs [data-baseweb="tab"] {
         height: 50px;
@@ -25,9 +24,8 @@ def create_assistant_tabs(assistants):
     .stTabs [data-baseweb="tab"]:nth-child(2) { background-color: #4ECDC4; }
     .stTabs [data-baseweb="tab"]:nth-child(3) { background-color: #8A2BE2; }
     .stTabs [data-baseweb="tab"]:nth-child(4) { background-color: #F7B801; }
-    .stTabs [data-baseweb="tab"]:nth-child(5) { background-color: #45B7D1; }
     .stTabs [aria-selected="true"] {
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
     </style>
     """, unsafe_allow_html=True)
