@@ -1,11 +1,12 @@
 import streamlit as st
 import datetime
-from constants import ASSISTANTS, OPENAI_API_KEY, OPENAI_MODEL
+from constants import OPENAI_API_KEY, OPENAI_MODEL, ASSISTANTS
 from assistant_manager import AssistantManager
 from pages import HomePage, HistoryPage
 from ui_manager import UIManager
 from state_manager import StateManager
 import utils
+from file_utils import parse_uploaded_file
 
 class StreamlitApp:
     def __init__(self):
@@ -25,7 +26,7 @@ class StreamlitApp:
             self.history_page.render()
 
     def setup_page(self):
-        st.set_page_config(page_title="Editor Assistant", page_icon="🤖", layout="wide")
+        st.set_page_config(page_title="AI Assistant", page_icon="🤖", layout="wide")
 
     def handle_user_input(self, user_input, assistant_id):
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -60,3 +61,13 @@ class StreamlitApp:
 
     def create_message_actions(self, msg, index):
         self.ui_manager.create_message_actions(msg, index)
+
+    def handle_file_upload(self):
+        uploaded_file = st.file_uploader("Choose a file", type=['md', 'pdf', 'txt'])
+        if uploaded_file is not None:
+            try:
+                file_content = parse_uploaded_file(uploaded_file)
+                st.session_state.user_input = file_content
+                st.success(f"File '{uploaded_file.name}' uploaded and parsed successfully!")
+            except Exception as e:
+                st.error(f"Error processing file: {str(e)}")

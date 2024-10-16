@@ -11,8 +11,16 @@ class HomePage:
         st.title("🤖 AI Editor in Chief")
         st.caption("🇺🇦 Powered by UActuality")
 
+        self.app.handle_file_upload()
+
+        if 'user_input' not in st.session_state:
+            st.session_state.user_input = ''
+
         user_input = ui_components.create_text_input(key="user_input")
         
+        if user_input != st.session_state.user_input:
+            st.session_state.user_input = user_input
+
         tabs = ui_components.create_assistant_tabs(ASSISTANTS)
 
         for i, tab in enumerate(tabs[:-1]):
@@ -23,11 +31,11 @@ class HomePage:
                     self.render_instagram_options()
 
                 if ui_components.create_process_button(ASSISTANTS[i]['name'], key=f"process_button_{i}"):
-                    if user_input:
-                        response = self.app.handle_user_input(user_input, ASSISTANTS[i]['id'])
+                    if st.session_state.user_input:
+                        response = self.app.handle_user_input(st.session_state.user_input, ASSISTANTS[i]['id'])
                         self.app.display_assistant_response(response)
                     else:
-                        ui_components.create_warning_message("Please enter some text before processing.", key=f"warning_{i}")
+                        ui_components.create_warning_message("Please enter some text or upload a file before processing.", key=f"warning_{i}")
 
     def render_instagram_options(self):
         st.session_state.show_instagram_options = st.toggle("Show Instagram Content Options", value=st.session_state.show_instagram_options)

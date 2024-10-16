@@ -2,9 +2,9 @@
 
 import streamlit as st
 
-def create_text_input(key="user_input", height=200):
+def create_text_input(key="user_input", height=200, value=""):
     """Create the main text input area."""
-    return st.text_area("Enter your text here:", height=height, key=key)
+    return st.text_area("Enter your text here:", value=value, height=height, key=key)
 
 def create_assistant_tabs(assistants):
     st.markdown("""
