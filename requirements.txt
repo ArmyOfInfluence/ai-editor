@@ -3,4 +3,4 @@ python-dotenv
 openai
 pyperclip
 PyPDF2
-markdown
+html2text
